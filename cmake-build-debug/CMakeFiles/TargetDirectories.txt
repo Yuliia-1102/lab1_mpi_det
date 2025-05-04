@@ -1,0 +1,3 @@
+/Users/macbook/CLionProjects/lab1_mpi_det/cmake-build-debug/CMakeFiles/lab1_mpi_det.dir
+/Users/macbook/CLionProjects/lab1_mpi_det/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/macbook/CLionProjects/lab1_mpi_det/cmake-build-debug/CMakeFiles/rebuild_cache.dir

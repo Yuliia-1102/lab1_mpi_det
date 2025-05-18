@@ -7,59 +7,59 @@
 using namespace std;
 
 // Обчислення визначника методом Гаусса з частковим вибором головного елемента.
-double determinant(vector<vector<double>> A) {
-    size_t n = A.size();
+double determinant(vector<double> A, int n) {
     double det = 1.0;
     int sign = 1;
 
     for (int k = 0; k < n; ++k) {
-        int row = k;
-        double max_val = fabs(A[k][k]);
+        int pivot = k;
+        double max_val = fabs(A[k * n + k]);
+
         for (int i = k + 1; i < n; ++i) {
-            if (fabs(A[i][k]) > max_val) {
-                max_val = fabs(A[i][k]);
-                row = i;
+            double val = fabs(A[i * n + k]);
+            if (val > max_val) {
+                max_val = val;
+                pivot = i;
             }
         }
 
-        if (fabs(A[row][k]) < 1e-12) {
-            return 0.0;
-        }
+        if (fabs(max_val) < 1e-12) return 0.0;
 
-        if (row != k) {
-            swap(A[k], A[row]);
-            sign = -sign;
+        if (pivot != k) {
+            for (int j = 0; j < n; ++j)
+                swap(A[k * n + j], A[pivot * n + j]);
+            sign *= -1;
         }
-
-        det *= A[k][k];
 
         for (int i = k + 1; i < n; ++i) {
-            double factor = A[i][k] / A[k][k];
-            for (int j = k; j < n; ++j) {
-                A[i][j] = A[i][j] - factor * A[k][j];
-            }
+            double factor = A[i * n + k] / A[k * n + k];
+            for (int j = k; j < n; ++j)
+                A[i * n + j] -= factor * A[k * n + j];
         }
     }
+
+    for (int i = 0; i < n; ++i)
+        det *= A[i * n + i];
+
     return sign * det;
 }
 
 int main() {
-    int n;
-    cout << "Введіть розмірність квадратної матриці: ";
-    cin >> n;
+    int n = 2520;
+    cout << "Розмірність квадратної матриці: " << n << endl;
 
-    vector<vector<double>> A(n, vector<double>(n));
+    vector<double> A (n*n);
 
     mt19937 gen(11);
     uniform_real_distribution<> dis(0.0, 1.0);
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < n; j++) {
-            A[i][j] = dis(gen);
-        }
+    for (int i = 0; i < n * n; i++) {
+        A[i] = dis(gen);
     }
 
+    vector<double> A_copy = A;
+
     auto start= std::chrono::high_resolution_clock::now();
-    double det = determinant(A);
+    double det = determinant(A_copy, n);
     auto end= std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
 
